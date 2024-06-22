@@ -1,22 +1,30 @@
-// Register.js
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase/firebase.config";
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = () => {
+    if (password.length < 6) {
+      alert('Password should be at least 6 characters long.');
+      return;
+    }
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log("User registered: ", user);
+        navigate('/'); // navigate to home page upon successful registration
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.error("Error registering: ", errorCode, errorMessage);
+        alert(`Error registering: ${errorMessage}`);
       });
   };
 
@@ -40,9 +48,15 @@ function Register() {
         />
         <button
           onClick={handleRegister}
-          className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+          className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 mb-4"
         >
           Register
+        </button>
+        <button
+          onClick={() => navigate('/login')}
+          className="w-full text-gray-500 py-2 px-4 rounded hover:underline"
+        >
+          Already have an account? Login
         </button>
       </div>
     </div>

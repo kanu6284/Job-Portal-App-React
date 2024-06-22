@@ -1,11 +1,12 @@
-// ProtectedRoute.js
+// PrivateRoute.js
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../firebase/AuthContex';
+import { useAuth } from './AuthContex';
 
-const ProtectedRoute = ({ element }) => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? element : <Navigate to="/login" />;
+const PrivateRoute = ({ element: Component }) => {
+    const { currentUser } = useAuth();
+
+    return currentUser ? <Component /> : <Navigate to="/login" />;
 };
 
-export default ProtectedRoute;
+export default PrivateRoute;
